@@ -12,19 +12,31 @@ def get_response_openai(prompt):
     # set the model and prompt
     model_engine = "gpt-3.5-turbo"
     # set the maximum number of tokens to generate in the response
-    max_tokens = 1024
+    # max_tokens = 1024
     # generate a response
-    completion = openai.Completion.create(
-        engine=model_engine,
-        prompt=prompt,
-        max_tokens=max_tokens,
-        temperature=0.5,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
+    completion = openai.ChatCompletion.create(
+        model=model_engine,
+        messages=[{"role": "user", "content": prompt}],
     )
     # return the response
-    return completion.choices[0].text
+
+    # # set the model and prompt
+    # model_engine = "gpt-3.5-turbo"
+    # # set the maximum number of tokens to generate in the response
+    # max_tokens = 1024
+    # # generate a response
+    # completion = openai.Completion.create(
+    #     engine=model_engine,
+    #     prompt=prompt,
+    #     max_tokens=max_tokens,
+    #     temperature=0.5,
+    #     top_p=1,
+    #     frequency_penalty=0,
+    #     presence_penalty=0
+    # )
+    # # return the response
+
+    return completion.choices[0].message.content
 
 
 def get_response_openai_test(prompt):
@@ -34,3 +46,13 @@ def get_response_openai_test(prompt):
     :return: reversed string
     """
     return prompt[::-1]
+
+
+def main():
+    prompt = "How to be a sales man"
+    reply = get_response_openai(prompt)
+    print(reply)
+
+
+if __name__ == '__main__':
+    main()
