@@ -2,7 +2,7 @@ import os
 import telebot
 from openai_res import get_response_openai, get_response_openai_test
 
-max_turns = 10
+max_turns = 20
 history = []
 turns = 0
 
