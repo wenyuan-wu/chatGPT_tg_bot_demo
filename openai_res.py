@@ -16,7 +16,7 @@ def get_response_openai(prompt):
     # generate a response
     completion = openai.ChatCompletion.create(
         model=model_engine,
-        messages=[{"role": "user", "content": prompt}],
+        messages=prompt,
     )
     # return the response
 

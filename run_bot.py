@@ -2,12 +2,15 @@ import os
 import telebot
 from openai_res import get_response_openai, get_response_openai_test
 
+max_turns = 10
+history = []
+turns = 0
 
-def run_tg_bot(bot_token, test=False):
+
+def run_tg_bot(bot_token):
     """
     Function to initialize the bot.
     :param bot_token: environment variable BOT_TOKEN
-    :param test: if this is a test
     :return: None
     """
     bot = telebot.TeleBot(bot_token)
@@ -25,12 +28,39 @@ def run_tg_bot(bot_token, test=False):
 
     @bot.message_handler(func=lambda msg: True)
     def respond_openai(message):
-        prompt = message.text
-        if test:
-            reply = get_response_openai_test(prompt)
+        global turns, history
+        # Keep track of conversation history
+        if not history:
+            history.append({"role": "system", "content": "You are a helpful assistant."})
+        if message.text == "/new":
+            # Reset history and turn counter
+            history = []
+            turns = 0
+            bot.send_message(message.chat.id,
+                             "Start new conversation")
         else:
+            # Add user message to history
+            history.append({"role": "user", "content": message.text})
+            prompt = history
             reply = get_response_openai(prompt)
-        bot.reply_to(message, reply)
+            history.append({"role": "assistant", "content": reply})
+            bot.reply_to(message, reply)
+            turns += 1
+
+            # Check if maximum turns has been reached
+            if turns >= max_turns:
+                # Send message to user to indicate maximum turns has been reached
+                bot.send_message(message.chat.id,
+                                 "This conversation has ended as the maximum number of turns has been reached.")
+
+                # Reset history and turn counter
+                history = []
+                turns = 0
+
+            # Send message to user to indicate number of turns left
+            elif turns >= max_turns - 5:
+                remaining_turns = max_turns - turns
+                bot.send_message(message.chat.id, f"{remaining_turns} turns left in this conversation.")
 
     bot.infinity_polling()
 
