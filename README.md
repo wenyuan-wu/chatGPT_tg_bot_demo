@@ -7,6 +7,11 @@ pip install openai
 pip install pytelegrambotapi
 ```
 
+environment variable:
+```commandline
+pip install python-dotenv
+```
+
 based on:
 https://www.freecodecamp.org/news/how-to-create-a-telegram-bot-using-python/
 

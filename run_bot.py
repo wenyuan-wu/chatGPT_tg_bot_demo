@@ -1,6 +1,7 @@
 import os
 import telebot
 from openai_res import get_response_openai, get_response_openai_test
+from dotenv import load_dotenv
 
 max_turns = 20
 conversations = {}  # Dictionary to store the conversation history for each user
@@ -66,6 +67,7 @@ def run_tg_bot(bot_token):
 
 
 def main():
+    load_dotenv()
     bot_token = os.environ.get('BOT_TOKEN')
     run_tg_bot(bot_token)
 
