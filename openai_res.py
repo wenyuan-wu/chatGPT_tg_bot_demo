@@ -10,7 +10,8 @@ def get_response_openai(prompt):
     """
     openai.api_key = os.environ.get('OPENAI_API')
     # set the model and prompt
-    model_engine = "gpt-4"
+    # model_engine = "gpt-3.5-turbo-16k-0613"
+    model_engine = "gpt-4-1106-preview"
     # set the maximum number of tokens to generate in the response
     # max_tokens = 1024
     # generate a response
