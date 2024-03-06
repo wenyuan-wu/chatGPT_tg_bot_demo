@@ -1,5 +1,6 @@
 import openai
 import os
+import anthropic
 
 
 def get_response_openai(prompt):
@@ -11,7 +12,7 @@ def get_response_openai(prompt):
     openai.api_key = os.environ.get('OPENAI_API')
     # set the model and prompt
     # model_engine = "gpt-3.5-turbo-16k-0613"
-    model_engine = "gpt-4-1106-preview"
+    model_engine = "gpt-4-turbo-preview"
     # set the maximum number of tokens to generate in the response
     # max_tokens = 1024
     # generate a response
@@ -49,9 +50,30 @@ def get_response_openai_test(prompt):
     return prompt[::-1]
 
 
+def get_response_claude(prompt):
+    client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+    message = client.messages.create(
+    model="claude-3-opus-20240229",
+    max_tokens=1000,
+    temperature=0,
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": prompt
+                }
+                ]
+            }
+        ]
+    )
+    return message.content[0].text
+
+
 def main():
     prompt = "How to be a sales man"
-    reply = get_response_openai(prompt)
+    reply = get_response_claude(prompt)
     print(reply)
 
 
