@@ -48,7 +48,7 @@ def run_tg_bot(bot_token):
             conversations[chat_id].append({"role": "assistant", "content": reply})
 
             # Send AI generated response to user
-            bot.reply_to(message, reply)
+            bot.reply_to(message, reply, parse_mode="Markdown")
 
             # Check if maximum turns has been reached
             if len(conversations[chat_id]) // 2 >= max_turns:
