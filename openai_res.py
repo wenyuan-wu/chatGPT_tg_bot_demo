@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 import os
 import anthropic
 
@@ -9,17 +9,17 @@ def get_response_openai(prompt):
     :param prompt: input prompt
     :return: respond string
     """
-    openai.api_key = os.environ.get('OPENAI_API')
     # set the model and prompt
     # model_engine = "gpt-3.5-turbo-16k-0613"
-    model_engine = "gpt-4-turbo-preview"
+    # model_engine = "gpt-4-turbo-preview"
+    # model_engine = "o1-preview"
+    model_engine = "gpt-4o-mini"
     # set the maximum number of tokens to generate in the response
     # max_tokens = 1024
     # generate a response
-    completion = openai.ChatCompletion.create(
-        model=model_engine,
-        messages=prompt,
-    )
+    client = OpenAI(api_key=os.environ.get('OPENAI_API'))
+    completion = client.chat.completions.create(model=model_engine,
+    messages=prompt)
     # return the response
 
     # # set the model and prompt
@@ -74,7 +74,11 @@ def get_response_claude(prompt):
 
 def main():
     prompt = "generate a joke with one sentence"
-    reply = get_response_claude(prompt)
+    # reply = get_response_claude(prompt)
+    prompt_openai = [
+        {"role": "user", "content": prompt}
+    ]
+    reply = get_response_openai(prompt_openai)
     print(reply)
 
 
