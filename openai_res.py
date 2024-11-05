@@ -1,6 +1,6 @@
 from openai import OpenAI
 import os
-import anthropic
+# import anthropic
 
 
 def get_response_openai(prompt):
