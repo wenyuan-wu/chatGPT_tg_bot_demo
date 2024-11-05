@@ -73,6 +73,7 @@ def get_response_claude(prompt):
 
 
 def main():
+    load_dotenv()
     prompt = "generate a joke with one sentence"
     # reply = get_response_claude(prompt)
     prompt_openai = [
