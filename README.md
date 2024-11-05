@@ -4,6 +4,10 @@ A telegram bot to demostrate a ChatGPT-like conversitional agent powered by open
 ```commandline
 pip install telebot
 pip install openai
+```
+
+optional:
+```commandline
 pip install pytelegrambotapi
 ```
 
