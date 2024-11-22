@@ -21,6 +21,8 @@ It needs two keys: `BOT_TOKEN` and `OPENAI_API`
 
 Default location: `./prompts.yaml`
 
+**Remember to change model engine and/or prompts!**
+
 ```yaml
 ---
 model_engine: "gpt-4o-mini"

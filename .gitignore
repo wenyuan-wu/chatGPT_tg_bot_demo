@@ -3,3 +3,6 @@
 venv/
 __pycache__/
 output.log
+
+# prompts should be unique to each application
+prompts.yaml
