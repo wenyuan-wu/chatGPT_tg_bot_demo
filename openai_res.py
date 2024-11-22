@@ -1,44 +1,26 @@
 from openai import OpenAI
 import os
+from dotenv import load_dotenv
+import yaml
 # import anthropic
 
 
-def get_response_openai(prompt):
+#TODO: code clean up
+def get_response_openai(messages, settings):
     """
     Function to generate response from openAI's API
     :param prompt: input prompt
     :return: respond string
     """
-    # set the model and prompt
-    # model_engine = "gpt-3.5-turbo-16k-0613"
-    # model_engine = "gpt-4-turbo-preview"
-    # model_engine = "o1-preview"
-    model_engine = "gpt-4o-mini"
-    # set the maximum number of tokens to generate in the response
-    # max_tokens = 1024
-    # generate a response
+    model_engine = settings["model_engine"]
     client = OpenAI(api_key=os.environ.get('OPENAI_API'))
     completion = client.chat.completions.create(model=model_engine,
-    messages=prompt)
-    # return the response
-
-    # # set the model and prompt
-    # model_engine = "gpt-3.5-turbo"
-    # # set the maximum number of tokens to generate in the response
-    # max_tokens = 1024
-    # # generate a response
-    # completion = openai.Completion.create(
-    #     engine=model_engine,
-    #     prompt=prompt,
-    #     max_tokens=max_tokens,
-    #     temperature=0.5,
-    #     top_p=1,
-    #     frequency_penalty=0,
-    #     presence_penalty=0
-    # )
-    # # return the response
-
-    return completion.choices[0].message.content
+    messages=messages)
+    completion = client.chat.completions.create(model=model_engine,
+    messages=messages)
+    # print(completion)
+    message = completion.choices[0].message.content
+    return message
 
 
 def get_response_openai_test(prompt):
@@ -50,36 +32,48 @@ def get_response_openai_test(prompt):
     return prompt[::-1]
 
 
-def get_response_claude(prompt):
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    client = anthropic.Anthropic(api_key=api_key)
-    message = client.messages.create(
-    model="claude-3-opus-20240229",
-    max_tokens=1000,
-    temperature=0,
-    messages=[
-        {
-            "role": "user",
-            "content": [
-                {
-                    "type": "text",
-                    "text": prompt
-                }
-                ]
-            }
-        ]
-    )
-    return message.content[0].text
+#TODO: code clean up
+# def get_response_claude(prompt):
+#     api_key = os.environ.get("ANTHROPIC_API_KEY")
+#     client = anthropic.Anthropic(api_key=api_key)
+#     message = client.messages.create(
+#     model="claude-3-opus-20240229",
+#     max_tokens=1000,
+#     temperature=0,
+#     messages=[
+#         {
+#             "role": "user",
+#             "content": [
+#                 {
+#                     "type": "text",
+#                     "text": prompt
+#                 }
+#                 ]
+#             }
+#         ]
+#     )
+#     return message.content[0].text
+
+
+def get_settings(yaml_file):
+    """
+    Function to load settings, e.g., prompts from yaml file.
+    """
+    with open(yaml_file, "r") as f:
+        settings = yaml.load(f, Loader=yaml.SafeLoader)
+    return settings
 
 
 def main():
     load_dotenv()
+    yaml_file = "./prompts.yaml"
     prompt = "generate a joke with one sentence"
     # reply = get_response_claude(prompt)
-    prompt_openai = [
+    messages_openai = [
         {"role": "user", "content": prompt}
     ]
-    reply = get_response_openai(prompt_openai)
+    settings = get_settings(yaml_file)
+    reply = get_response_openai(messages_openai, settings)
     print(reply)
 
 

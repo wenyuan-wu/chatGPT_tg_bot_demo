@@ -1,0 +1,6 @@
+---
+model_engine: "gpt-4o-mini"
+system_prompt: "You are a helpful assistant."
+welcome_message: "Hello, this is a tiny demo for a ChatGPT-like conversational agent.\nSimply type any message to get a AI generated reply.\ne.g. 'What is quantum computing?"
+help_message: "Just try anything ..."
+new_message: "Start a new conversation."
