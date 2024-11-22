@@ -18,7 +18,9 @@ def run_tg_bot(bot_token, settings):
     sys_prompt = settings["system_prompt"]
     help_msg = settings["help_message"]
     new_msg = settings["new_message"]
-
+    sys_omit = False
+    if settings["model_engine"] in ["o1-mini", "o1-preview"]:
+        sys_omit = True
 
     @bot.message_handler(commands=['start'])
     def send_welcome(message):
@@ -36,12 +38,14 @@ def run_tg_bot(bot_token, settings):
         # Initialize conversation history for new user
         if chat_id not in conversations:
             conversations[chat_id] = []
-            conversations[chat_id].append({"role": "system", "content": sys_prompt})
+            if not sys_omit:
+                conversations[chat_id].append({"role": "system", "content": sys_prompt})
 
         # Start new conversation if user types /new
         if message.text == "/new":
             conversations[chat_id] = []
-            conversations[chat_id].append({"role": "system", "content": sys_prompt})
+            if not sys_omit:
+                conversations[chat_id].append({"role": "system", "content": sys_prompt})
             bot.send_message(chat_id, new_msg)
         else:
             # Add user message to conversation history
@@ -55,7 +59,10 @@ def run_tg_bot(bot_token, settings):
             conversations[chat_id].append({"role": "assistant", "content": reply})
 
             # Send AI generated response to user
-            bot.reply_to(message, reply, parse_mode="Markdown")
+            max_length = 4096
+            # Split the reply if it's too long
+            for i in range(0, len(reply), max_length):
+                bot.reply_to(message, reply[i:i + max_length], parse_mode="Markdown")
 
             # Check if maximum turns has been reached
             if len(conversations[chat_id]) // 2 >= max_turns:
